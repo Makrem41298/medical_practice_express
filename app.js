@@ -1,16 +1,30 @@
+// Load environment variables
 require('dotenv').config();
-const express=require('express')
-const mongoose = require('mongoose')
+
+// Import required modules
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const app = express();
+
+// Middleware
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Database URL and Port
 const dbUrl = process.env.DATABASE_URL;
-const app=express()
-const port =process.env.PORT || 3000
-app.get('/', (req, res) => {
-    res.send('welcome to express')
-})
-app.listen(port, () => {
-    console.log('Listening on port ' + port)
-})
+const port = process.env.PORT || 3000;
+
+// Connect to MongoDB
 console.log(`Connecting to database: ${dbUrl}`);
-mongoose.connect(process.env.DATABASE_URL)
-    .then(()=>console.log('Mongodb connected'))
-    .catch((err)=>console.log('Error' , err))
+mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB connected successfully'))
+    .catch((err) => console.error('Database connection error:', err));
+
+// Load routes
+require('./routes/api')(app);
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
