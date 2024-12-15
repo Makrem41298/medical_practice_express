@@ -1,6 +1,11 @@
 const  mongoose=require('mongoose')
-const appointmentSchema=new Mongoose.Schema({
-    status: {type: String, enum: ['cancel', 'accept', 'suspend']}
+const PatientModel=require('./Patient.model')
+
+const appointmentSchema=new mongoose.Schema({
+    status: {type: String, enum: ['cancel', 'accept', 'suspend']},
+    date:{type:Date,required:true},
+    patient_id:{type:mongoose.Types.ObjectId,ref:PatientModel,required:true},
+
 },{
     timestamps:true}
 
