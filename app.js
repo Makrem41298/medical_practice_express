@@ -6,10 +6,19 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const app = express();
+const exphbs = require('express-handlebars');
 
 // Middleware
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.engine('hbs', exphbs.engine({
+    extname: '.hbs',
+    layoutsDir: 'views/mail/layouts/',
+    partialsDir: 'views/mail/partials/',
+}));
+app.set('view engine', 'hbs');
+app.set('views', 'views');
+module.exports = app;
 
 // Database URL and Port
 const dbUrl = process.env.DATABASE_URL;
@@ -23,6 +32,7 @@ mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // Load routes
 require('./routes/api')(app);
+
 
 // Start the server
 app.listen(port, () => {
