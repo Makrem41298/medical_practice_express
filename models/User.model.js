@@ -4,7 +4,7 @@ const userSchema=new mongoose.Schema({
     phone:{type:String,required:false},
     email: {type:String,unique:true,required:true},
     password: {type:String,unique:true,required:true},
-    role:{type:String,required:false},
+    role:{type:String,enum:['Doctor','Secretary'],required:false},
     restKey:{type:String,required:false},
 },
     {timestamps:true})

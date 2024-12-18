@@ -1,17 +1,14 @@
 const UserModel = require("../models/User.model")
 const bcrypt = require("bcryptjs");
 const jwt=require('jsonwebtoken')
-const {sign} = require("jsonwebtoken");
-const {transporter} = require("../config/mail.config");
 const crypto = require('crypto');
 
 const emailForgetPassword=require('../mail/email')
 
 exports.register = async (req, res) => {
     try {
-        const { email, password, username } = req.body;
+        const { email, password, username,role } = req.body;
 
-        // Check if email and password are provided
         if (!email || !password) {
             return res.status(400).send({ error: 'Email and password are required' });
         }
@@ -28,6 +25,7 @@ exports.register = async (req, res) => {
         const newUser = await UserModel.create({
             username,
             email,
+            role,
             password: hashedPassword,
         });
 
@@ -47,7 +45,7 @@ exports.login=async(req,res)=>{
         if (email&&password){
             let user =await UserModel.findOne({email : email})
             if(user && await bcrypt.compare(password, user.password)){
-                let token=jwt.sign({_id: user._id,role:'test'},process.env.JWT_SECRET)
+                let token=jwt.sign({_id: user._id,role:user.role},process.env.JWT_SECRET)
                 res.send({username :user.username,token :token})
             }
 
@@ -118,7 +116,9 @@ exports.restorePassword=async(req,res)=>{
 
     }
 
-
-
+}
+exports.userProfile=async (req, res) => {
+    let user = await UserModel.findById(req.user_id).select('-password');
+    res.status(200).send({userProfile: user});
 }
 
