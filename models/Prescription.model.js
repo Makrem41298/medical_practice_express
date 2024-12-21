@@ -4,7 +4,7 @@ const ConsultationModel=require('../models/Consultation.model')
 const prescriptionSchema= new mongoose.Schema({
     mark:{type:String,required: true},
     consultation_id:{type:mongoose.Types.ObjectId,ref:ConsultationModel,required:true},
-    medicament:{type:mongoose.Types.ObjectId,ref:MedicamentModel}
+    medicament_id:[{type:mongoose.Types.ObjectId,ref:'Medicament'}],
 
 },{
     timestamps:true

@@ -7,7 +7,7 @@ const medicamentSchema= new mongoose.Schema({
     dosage: { type: String, required: false ,default:''},
     price:{type:Number,required: false, default:0},
     company:{type:String,required: false, default:''},
-    prescription_id:{type:mongoose.Types.ObjectId,ref:PrescriptionModel}
+    prescription_id:[{type:mongoose.Types.ObjectId,ref:PrescriptionModel}]
 
 },
     {

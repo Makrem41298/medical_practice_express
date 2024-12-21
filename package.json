@@ -12,6 +12,7 @@
     "esbuild": "^0.21.5",
     "express": "^4.21.2",
     "express-handlebars": "^8.0.1",
+    "express-validator": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "mailgun-js": "^0.22.0",
     "mongodb": "^6.12.0",

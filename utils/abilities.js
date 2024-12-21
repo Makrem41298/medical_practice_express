@@ -4,12 +4,6 @@ exports.defineAbilities = (user) => {
 
     if (user.role === 'Doctor') {
         can('manage', 'all');
-    } else if (user.role === 'Admin') {
-        can('manage', 'users');
-    } else {
-        can('read', 'profile');
-        cannot('manage', 'all');
     }
-
     return build();
 };

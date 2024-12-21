@@ -12,8 +12,6 @@ exports.register = async (req, res) => {
         if (!email || !password) {
             return res.status(400).send({ error: 'Email and password are required' });
         }
-
-        // Check if the user already exists
         let existingUser = await UserModel.findOne({ email });
         if (existingUser) {
             return res.status(409).send({ error: 'User already exists' }); // 409 Conflict
@@ -29,14 +27,53 @@ exports.register = async (req, res) => {
             password: hashedPassword,
         });
 
-        const { password: _, ...userWithoutPassword } = newUser.toObject(); // Exclude password from response
+        const { password: _, ...userWithoutPassword } = newUser.toObject();
         return res.status(201).send({ user: userWithoutPassword });
     } catch (err) {
-        // Log and handle errors
         console.error(err);
         return res.status(500).send({ error: 'An error occurred while registering the user' })
     }
 };
+exports.deleteUser = async (req, res) => {
+    const userId  = req.params.id
+    try {
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        await UserModel.findByIdAndDelete(userId);
+
+        res.status(200).json({ message: 'User and related data deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+        console.log(error);
+    }
+};
+
+
+exports.updateUser = async (req, res) => {
+    const  userId  = req.params.id;
+    const { username, email,role,password  } = req.body;
+
+
+    try {
+        // Find and update the user
+        const user = await UserModel.findByIdAndUpdate(
+            userId,
+            { username, email, role, password  },
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'User updated successfully', user });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 
 
 exports.login=async(req,res)=>{
